@@ -1,33 +1,47 @@
+#include "globals.h"
+#include "cube.h"
 #include "raylib.h"
-#include <stdio.h>
-#include <iostream>
+#include "textures.h"
+
+Model cube;
+
+void start() {
+    load_textures();
+    camera.position = {4.0f, 4.0f, 4.0f};
+    camera.target = {0.0f, 0.0f, 0.0f};
+    camera.up = {0.0f, 1.0f, 0.0f};
+    camera.fovy = 45.0f;
+    camera.projection = CAMERA_PERSPECTIVE;
+
+    Mesh cube_mesh = GenMeshCube(1.0f, 1.0f, 1.0f);
+    cube = LoadModelFromMesh(cube_mesh);
+    cube.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = T_ATLAS;
+}
+
+void update_2D() {
+    // DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+}
+
+void update_3D() {
+    draw_cube(cube, {0.0f, 0.0f, 0.0f}, WHITE);
+}
 
 int main() {
-    printf("HI\n");
-    std::cout << "HI\n";
-    // Initialization
-    const int screenWidth = 800;
-    const int screenHeight = 450;
-
-    InitWindow(screenWidth, screenHeight, "Basic raylib example");
-
-    SetTargetFPS(60); // Set our game to run at 60 frames-per-second
-
-    // Main game loop
-    while (!WindowShouldClose()) { // Detect window close button or ESC key
-        // Update (put your logic here)
-
-        // Draw
+    InitWindow(800, 450, "Raycppcraft");
+    start();
+    while (!WindowShouldClose()) {
         BeginDrawing();
+
         ClearBackground(RAYWHITE);
 
-        DrawText("Hello, raylib!", 350, 200, 20, DARKGRAY);
-        DrawCircle(screenWidth/2, screenHeight/2, 50, RED);
+        BeginMode3D(camera);
+        update_3D();
+        EndMode3D();
+
+        update_2D();
+
         EndDrawing();
     }
-
-    // De-Initialization
-    CloseWindow(); // Close window and OpenGL context
-
+    CloseWindow();
     return 0;
 }
