@@ -1,33 +1,34 @@
-#include "globals.h"
-#include "cube.h"
 #include "raylib.h"
+#include "chunk.h"
+#include "camera.h"
 #include "textures.h"
-
-Model cube;
+#include "world.h"
 
 void start() {
-    load_textures();
-    camera.position = {4.0f, 4.0f, 4.0f};
-    camera.target = {0.0f, 0.0f, 0.0f};
-    camera.up = {0.0f, 1.0f, 0.0f};
-    camera.fovy = 45.0f;
-    camera.projection = CAMERA_PERSPECTIVE;
+    load_texture();
 
-    Mesh cube_mesh = GenMeshCube(1.0f, 1.0f, 1.0f);
-    cube = LoadModelFromMesh(cube_mesh);
-    cube.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = T_ATLAS;
+    setup_camera();
+    DisableCursor();
+    // ToggleFullscreen();
+
+    load_example_cube();
+    load_chunks();
 }
 
 void update_2D() {
-    // DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+    DrawText(TextFormat("FPS: %d\nVertices Memory: %d KB",
+        GetFPS(),
+        chunk.vertices.size()*sizeof(float)/1024
+        ), 10, 10, 20, BLACK);
 }
 
 void update_3D() {
-    draw_cube(cube, {0.0f, 0.0f, 0.0f}, WHITE);
+    update_camera();
+    chunk.draw_model({0, 0, 0});
 }
 
 int main() {
-    InitWindow(800, 450, "Raycppcraft");
+    InitWindow(1920, 900, "Raycppcraft");
     start();
     while (!WindowShouldClose()) {
         BeginDrawing();
