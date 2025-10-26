@@ -1,56 +1,100 @@
 #include "chunk.h"
-#include <cstdlib>
+#include <algorithm>
+#include <raymath.h>
 #include "textures.h"
 
 Mesh cube;
-void load_example_cube() {
+Material default_mat;
+void load_defaults() {
+    default_mat = LoadMaterialDefault();
     cube = GenMeshCube(1.0f, 1.0f, 1.0f);
 }
 
 void Chunk::add_block(Vector3 local_pos, BLOCK block) {
-    for (int i = 0; i < cube.vertexCount * 3; i += 3) {
-        vertices.push_back(cube.vertices[i + 0] + local_pos.x);
-        vertices.push_back(cube.vertices[i + 1] + local_pos.y);
-        vertices.push_back(cube.vertices[i + 2] + local_pos.z);
-    }
-    normals.insert(normals.end(), cube.normals, cube.normals + cube.vertexCount * 3);
-    for (int i = 0; i < 48; i++) { // cube.vertexCount = 48
-        if (i%2 == 0) { // even = U
-            // using "1.0f-" to flip the texture
-            texcoords.push_back((1.0f-cube.texcoords[i] + t_map[block][i/8].x) * ATLAS_UNIT);
-        } else { // odd = V
-            texcoords.push_back((1.0f-cube.texcoords[i] + t_map[block][i/8].y) * ATLAS_UNIT);
+    if (vertexCount1+24 <= USHRT_MAX) {
+        for (int i = 0; i < cube.triangleCount * 3; i++) {
+            indices1.push_back(cube.indices[i] + vertexCount1);
         }
+        for (int i = 0; i < cube.vertexCount * 3; i += 3) {
+            vertices1.push_back(cube.vertices[i + 0] + local_pos.x);
+            vertices1.push_back(cube.vertices[i + 1] + local_pos.y);
+            vertices1.push_back(cube.vertices[i + 2] + local_pos.z);
+        }
+        normals1.insert(normals1.end(), cube.normals, cube.normals + cube.vertexCount * 3);
+        for (int i = 0; i < 48; i++) {
+            if (i%2 == 0) { // even = U
+                // using "1.0f-" to flip the texture
+                texcoords1.push_back((1.0f-cube.texcoords[i] + t_map[block][i/8].x) * ATLAS_UNIT);
+            } else { // odd = V
+                texcoords1.push_back((1.0f-cube.texcoords[i] + t_map[block][i/8].y) * ATLAS_UNIT);
+            }
+        }
+        vertexCount1 += cube.vertexCount;
+        triangleCount1 += cube.triangleCount;
+    } else {
+        for (int i = 0; i < cube.triangleCount * 3; i++) {
+            indices2.push_back(cube.indices[i] + vertexCount2);
+        }
+        for (int i = 0; i < cube.vertexCount * 3; i += 3) {
+            vertices2.push_back(cube.vertices[i + 0] + local_pos.x);
+            vertices2.push_back(cube.vertices[i + 1] + local_pos.y);
+            vertices2.push_back(cube.vertices[i + 2] + local_pos.z);
+        }
+        normals2.insert(normals2.end(), cube.normals, cube.normals + cube.vertexCount * 3);
+        for (int i = 0; i < 48; i++) {
+            if (i%2 == 0) { // even = U
+                // using "1.0f-" to flip the texture
+                texcoords2.push_back((1.0f-cube.texcoords[i] + t_map[block][i/8].x) * ATLAS_UNIT);
+            } else { // odd = V
+                texcoords2.push_back((1.0f-cube.texcoords[i] + t_map[block][i/8].y) * ATLAS_UNIT);
+            }
+        }
+        vertexCount2 += cube.vertexCount;
+        triangleCount2 += cube.triangleCount;
     }
-    for (int i = 0; i < cube.triangleCount * 3; i++) {
-        indices.push_back(cube.indices[i] + vertexCount);
-    }
-    vertexCount += cube.vertexCount;
-    triangleCount += cube.triangleCount;
 }
 
 void Chunk::build_model() {
-    Mesh mesh = { 0 };
+    Mesh mesh1 = { 0 };
+    mesh1.vertexCount = vertexCount1;
+    mesh1.triangleCount = triangleCount1;
+    mesh1.vertices = new float[vertices1.size()];
+    std::ranges::copy(vertices1, mesh1.vertices);
+    mesh1.normals = new float[normals1.size()];
+    std::ranges::copy(normals1, mesh1.normals);
+    mesh1.texcoords = new float[texcoords1.size()];
+    std::ranges::copy(texcoords1, mesh1.texcoords);
+    mesh1.indices = new unsigned short[indices1.size()];
+    std::ranges::copy(indices1, mesh1.indices);
+    UploadMesh(&mesh1, false);
 
-    mesh.vertexCount = vertexCount;
-    mesh.triangleCount = triangleCount;
-    mesh.vertices = new float[vertices.size()];
-    std::copy(vertices.begin(), vertices.end(), mesh.vertices);
-    mesh.normals = new float[normals.size()];
-    std::copy(normals.begin(), normals.end(), mesh.normals);
-    mesh.texcoords = new float[texcoords.size()];
-    std::copy(texcoords.begin(), texcoords.end(), mesh.texcoords);
-    mesh.indices = new unsigned short[indices.size()];
-    std::copy(indices.begin(), indices.end(), mesh.indices);
+    Mesh mesh2 = { 0 };
+    mesh2.vertexCount = vertexCount2;
+    mesh2.triangleCount = triangleCount2;
+    mesh2.vertices = new float[vertices2.size()];
+    std::ranges::copy(vertices2, mesh2.vertices);
+    mesh2.normals = new float[normals2.size()];
+    std::ranges::copy(normals2, mesh2.normals);
+    mesh2.texcoords = new float[texcoords2.size()];
+    std::ranges::copy(texcoords2, mesh2.texcoords);
+    mesh2.indices = new unsigned short[indices2.size()];
+    std::ranges::copy(indices2, mesh2.indices);
+    UploadMesh(&mesh2, false);
 
-    UploadMesh(&mesh, false);
-    model = LoadModelFromMesh(mesh);
+    UnloadModel(model);
+    model = { 0 };
+    model.transform = MatrixIdentity();
+    model.meshCount = 2;
+    model.meshes = new Mesh[2];
+    model.meshes[0] = mesh1;
+    model.meshes[1] = mesh2;
+    model.materialCount = 1;
+    model.materials = new Material[1];
+    model.materials[0] = default_mat;
+    model.meshMaterial = new int[2];
+    model.meshMaterial[0] = 0;
+    model.meshMaterial[1] = 0;
     model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = ATLAS;
-
-    delete[] mesh.vertices;
-    delete[] mesh.normals;
-    delete[] mesh.texcoords;
-    delete[] mesh.indices;
 }
 
 void Chunk::draw_model(Vector3 position) {

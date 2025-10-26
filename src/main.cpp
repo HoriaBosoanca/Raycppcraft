@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include "chunk.h"
 #include "camera.h"
+#include "stats.h"
 #include "textures.h"
 #include "world.h"
 
@@ -11,14 +12,14 @@ void start() {
     DisableCursor();
     // ToggleFullscreen();
 
-    load_example_cube();
+    load_defaults();
     load_chunks();
 }
 
 void update_2D() {
-    DrawText(TextFormat("FPS: %d\nVertices Memory: %d KB",
+    DrawText(TextFormat("FPS: %d\nMemory: %d KB",
         GetFPS(),
-        chunk.vertices.size()*sizeof(float)/1024
+        getMemoryKB()
         ), 10, 10, 20, BLACK);
 }
 
