@@ -1,22 +1,26 @@
 #include "raylib.h"
-#include "chunk.h"
 #include "camera.h"
-#include "stats.h"
-#include "textures.h"
-#include "world.h"
+#include "renderer/chunk.h"
+#include "renderer/textures.h"
+#include "worldgen/world.h"
+#include "stats-windows/stats.h"
 
 void start() {
+    // render
     load_texture();
+    load_defaults();
+    generate_world();
 
+    // camera
     setup_camera();
+
+    // QOL
     DisableCursor();
     // ToggleFullscreen();
-
-    load_defaults();
-    load_chunks();
 }
 
 void update_2D() {
+    // stats
     DrawText(TextFormat("FPS: %d\nMemory: %d KB",
         GetFPS(),
         getMemoryKB()
@@ -25,23 +29,19 @@ void update_2D() {
 
 void update_3D() {
     update_camera();
-    chunk.draw_model({0, 0, 0});
+    render_world();
 }
 
 int main() {
-    InitWindow(1920, 900, "Raycppcraft");
+    InitWindow(3440, 1300, "Raycppcraft");
     start();
     while (!WindowShouldClose()) {
         BeginDrawing();
-
         ClearBackground(RAYWHITE);
-
         BeginMode3D(camera);
         update_3D();
         EndMode3D();
-
         update_2D();
-
         EndDrawing();
     }
     CloseWindow();
