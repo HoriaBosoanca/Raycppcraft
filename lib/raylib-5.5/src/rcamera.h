@@ -444,7 +444,7 @@ void UpdateCamera(Camera *camera, int mode)
     bool rotateUp = false;
 
     // Camera speeds based on frame time
-    float cameraMoveSpeed = CAMERA_MOVE_SPEED*GetFrameTime();
+    float cameraMoveSpeed = (IsKeyDown(KEY_LEFT_CONTROL) ? 10.0f : 1.0f)*CAMERA_MOVE_SPEED*GetFrameTime();
     float cameraRotationSpeed = CAMERA_ROTATION_SPEED*GetFrameTime();
     float cameraPanSpeed = CAMERA_PAN_SPEED*GetFrameTime();
     float cameraOrbitalSpeed = CAMERA_ORBITAL_SPEED*GetFrameTime();
