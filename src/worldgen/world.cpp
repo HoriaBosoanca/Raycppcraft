@@ -23,14 +23,13 @@ void generate_chunk(Chunk& chunk, Vector2 world_pos) {
             int height = (int) ((noise.GetNoise(world_pos.x*CHUNK_SIZE + x, world_pos.y*CHUNK_SIZE + z)+1.0f)/2.0f*(float)CHUNK_HEIGHT);
             int y = 0;
             for (; y < height-1; y++) {
-                chunk.add_block(Vector3{(float) x, (float) y, (float) z}, y < (height-1)/2 ? B_STONE : B_DIRT);
+                chunk.add_block(Vector3{(float) x, (float) y, (float) z}, y < (height-1)/2 ? BLOCK::STONE : BLOCK::DIRT);
             }
-            chunk.add_block(Vector3{(float) x, (float) y, (float) z}, B_GRASS);
+            chunk.add_block(Vector3{(float) x, (float) y, (float) z}, BLOCK::GRASS);
         }
     }
 }
 
-Chunk chunk;
 void generate_world() {
     noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
     for (int x = -WORLD_SIZE; x <= WORLD_SIZE; x++) {
@@ -50,5 +49,4 @@ void render_world() {
             world[Vector2{(float) x, (float) z}].draw_model(Vector3{(float) x * CHUNK_SIZE, 0.0f, (float) z * CHUNK_SIZE});
         }
     }
-    chunk.draw_model(Vector3{0.0f, 0.0f, 0.0f});
 }
