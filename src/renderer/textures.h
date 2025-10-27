@@ -15,16 +15,16 @@ inline Vector2 GRASS_SIDE = Vector2{0.0f, 6.0f};
 inline Vector2 DIRT = Vector2{1.0f, 7.0f};
 inline Vector2 STONE = Vector2{4.0f, 6.0f};
 
-enum class BLOCK {
-    AIR,
-    GRASS,
-    DIRT,
-    STONE
+enum BLOCK {
+    B_AIR,
+    B_GRASS,
+    B_DIRT,
+    B_STONE
 };
 
 inline std::map<BLOCK, std::array<Vector2, 6>> t_map = {
-    {BLOCK::AIR,   {AIR, AIR, AIR, AIR, AIR, AIR}},
-    {BLOCK::GRASS, {GRASS_SIDE, GRASS_SIDE, GRASS_TOP, DIRT, GRASS_SIDE, GRASS_SIDE}},
-    {BLOCK::DIRT,  {DIRT, DIRT, DIRT, DIRT, DIRT, DIRT}},
-    {BLOCK::STONE, {STONE, STONE, STONE, STONE, STONE, STONE}}
+    {B_AIR,   {AIR, AIR, AIR, AIR, AIR, AIR}},
+    {B_GRASS, {GRASS_SIDE, GRASS_SIDE, GRASS_TOP, DIRT, GRASS_SIDE, GRASS_SIDE}},
+    {B_DIRT,  {DIRT, DIRT, DIRT, DIRT, DIRT, DIRT}},
+    {B_STONE, {STONE, STONE, STONE, STONE, STONE, STONE}}
 };

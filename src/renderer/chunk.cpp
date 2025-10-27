@@ -1,5 +1,6 @@
 #include "chunk.h"
 #include <algorithm>
+#include <iostream>
 #include <raymath.h>
 #include "textures.h"
 
@@ -11,6 +12,21 @@ void load_defaults() {
 }
 
 void Chunk::add_block(Vector3 local_pos, BLOCK block) {
+    blocks[(int)local_pos.x][(int)local_pos.y][(int)local_pos.z] = block;
+}
+
+bool Chunk::is_block_surrounded(Vector3 local_pos) {
+    if (local_pos.x == 0 || local_pos.x == CHUNK_SIZE-1 || local_pos.y == 0 || local_pos.y == CHUNK_HEIGHT-1 || local_pos.z == 0 || local_pos.z == CHUNK_SIZE-1) return false;
+    if (blocks[(int)local_pos.x-1][(int)local_pos.y][(int)local_pos.z] != B_AIR &&
+        blocks[(int)local_pos.x+1][(int)local_pos.y][(int)local_pos.z] != B_AIR &&
+        blocks[(int)local_pos.x][(int)local_pos.y-1][(int)local_pos.z] != B_AIR &&
+        blocks[(int)local_pos.x][(int)local_pos.y+1][(int)local_pos.z] != B_AIR &&
+        blocks[(int)local_pos.x][(int)local_pos.y][(int)local_pos.z-1] != B_AIR &&
+        blocks[(int)local_pos.x][(int)local_pos.y][(int)local_pos.z+1] != B_AIR) return true;
+    return false;
+}
+
+void Chunk::add_block_to_model(Vector3 local_pos, BLOCK block) {
     if (vertexCount1+24 <= USHRT_MAX) {
         for (int i = 0; i < cube.triangleCount * 3; i++) {
             indices1.push_back(cube.indices[i] + vertexCount1);
@@ -55,6 +71,29 @@ void Chunk::add_block(Vector3 local_pos, BLOCK block) {
 }
 
 void Chunk::build_model() {
+    vertexCount1 = 0;
+    vertexCount2 = 0;
+    triangleCount1 = 0;
+    triangleCount2 = 0;
+    vertices1.clear();
+    vertices2.clear();
+    normals1.clear();
+    normals2.clear();
+    texcoords1.clear();
+    texcoords2.clear();
+    indices1.clear();
+    indices2.clear();
+
+    for (int x = 0; x < CHUNK_SIZE; x++) {
+        for (int y = 0; y < CHUNK_HEIGHT; y++) {
+            for (int z = 0; z < CHUNK_SIZE; z++) {
+                if (blocks[x][y][z] != B_AIR && !is_block_surrounded(Vector3{(float) x, (float) y, (float) z})) {
+                    add_block_to_model(Vector3{(float) x, (float) y, (float) z}, blocks[x][y][z]);
+                }
+            }
+        }
+    }
+
     Mesh mesh1 = { 0 };
     mesh1.vertexCount = vertexCount1;
     mesh1.triangleCount = triangleCount1;

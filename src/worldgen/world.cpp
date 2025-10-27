@@ -15,20 +15,17 @@ struct Vector2Equal {
 };
 std::unordered_map<Vector2, Chunk, Vector2Hash, Vector2Equal> world;
 const int WORLD_SIZE = 16;
-const int CHUNK_SIZE = 16;
-const int CHUNK_HEIGHT = 48;
 FastNoiseLite noise;
 
 void generate_chunk(Chunk& chunk, Vector2 world_pos) {
     for (int x = 0; x < CHUNK_SIZE; x++) {
         for (int z = 0; z < CHUNK_SIZE; z++) {
             int height = (int) ((noise.GetNoise(world_pos.x*CHUNK_SIZE + x, world_pos.y*CHUNK_SIZE + z)+1.0f)/2.0f*(float)CHUNK_HEIGHT);
-            // int y = 0;
-            // for (; y < height-1; y++) {
-            //     chunk.add_block(Vector3{(float) x, (float) y, (float) z}, y < (height-1)/2 ? BLOCK::STONE : BLOCK::DIRT);
-            // }
-            // chunk.add_block(Vector3{(float) x, (float) y, (float) z}, BLOCK::GRASS);
-            chunk.add_block(Vector3{(float) x, (float) height, (float) z}, BLOCK::GRASS);
+            int y = 0;
+            for (; y < height-1; y++) {
+                chunk.add_block(Vector3{(float) x, (float) y, (float) z}, y < (height-1)/2 ? B_STONE : B_DIRT);
+            }
+            chunk.add_block(Vector3{(float) x, (float) y, (float) z}, B_GRASS);
         }
     }
 }
