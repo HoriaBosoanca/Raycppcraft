@@ -16,7 +16,7 @@ inline Vector2 GRASS_SIDE = Vector2{0.0f, 6.0f};
 inline Vector2 DIRT = Vector2{1.0f, 7.0f};
 inline Vector2 STONE = Vector2{4.0f, 6.0f};
 
-enum class BLOCK : int8_t {
+enum class BLOCK : uint8_t {
     AIR,
     GRASS,
     DIRT,

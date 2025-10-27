@@ -84,27 +84,19 @@ void Chunk::build_model() {
     Mesh mesh1 = { 0 };
     mesh1.vertexCount = vertexCount1;
     mesh1.triangleCount = triangleCount1;
-    mesh1.vertices = new float[vertices1.size()];
-    std::ranges::copy(vertices1, mesh1.vertices);
-    mesh1.normals = new float[normals1.size()];
-    std::ranges::copy(normals1, mesh1.normals);
-    mesh1.texcoords = new float[texcoords1.size()];
-    std::ranges::copy(texcoords1, mesh1.texcoords);
-    mesh1.indices = new unsigned short[indices1.size()];
-    std::ranges::copy(indices1, mesh1.indices);
+    mesh1.vertices = vertices1.data();
+    mesh1.normals = normals1.data();
+    mesh1.texcoords = texcoords1.data();
+    mesh1.indices = indices1.data();
     UploadMesh(&mesh1, false);
 
     Mesh mesh2 = { 0 };
     mesh2.vertexCount = vertexCount2;
     mesh2.triangleCount = triangleCount2;
-    mesh2.vertices = new float[vertices2.size()];
-    std::ranges::copy(vertices2, mesh2.vertices);
-    mesh2.normals = new float[normals2.size()];
-    std::ranges::copy(normals2, mesh2.normals);
-    mesh2.texcoords = new float[texcoords2.size()];
-    std::ranges::copy(texcoords2, mesh2.texcoords);
-    mesh2.indices = new unsigned short[indices2.size()];
-    std::ranges::copy(indices2, mesh2.indices);
+    mesh2.vertices = vertices2.data();
+    mesh2.normals = normals2.data();
+    mesh2.texcoords = texcoords2.data();
+    mesh2.indices = indices2.data();
     UploadMesh(&mesh2, false);
 
     UnloadModel(model);
