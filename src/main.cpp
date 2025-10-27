@@ -21,9 +21,10 @@ void start() {
 
 void update_2D() {
     // stats
-    DrawText(TextFormat("FPS: %d\nMemory: %d KB",
+    DrawText(TextFormat("FPS: %d\nMemory:\n%d KB\n%d MB",
         GetFPS(),
-        getMemoryKB()
+        getMemoryKB(),
+        getMemoryKB()/1024
         ), 10, 10, 20, BLACK);
 }
 

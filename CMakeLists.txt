@@ -12,6 +12,7 @@ add_executable(main ${SOURCES})
 target_include_directories(main PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${CMAKE_CURRENT_SOURCE_DIR}/lib/raylib-5.5_win64_mingw-w64/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/lib/FastNoiseLite/include
 )
 target_link_libraries(main PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/lib/raylib-5.5_win64_mingw-w64/lib/libraylib.a
