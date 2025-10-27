@@ -3,6 +3,7 @@ project(raycppcraft)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_EXE_LINKER_FLAGS "-static -static-libgcc -static-libstdc++")
+add_subdirectory(lib/raylib-5.5)
 file(GLOB SOURCES CONFIGURE_DEPENDS
         src/*.cpp
         src/renderer/*.cpp
@@ -11,10 +12,9 @@ file(GLOB SOURCES CONFIGURE_DEPENDS
 add_executable(main ${SOURCES})
 target_include_directories(main PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
-        ${CMAKE_CURRENT_SOURCE_DIR}/lib/raylib-5.5_win64_mingw-w64/include
         ${CMAKE_CURRENT_SOURCE_DIR}/lib/FastNoiseLite/include
 )
 target_link_libraries(main PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/lib/raylib-5.5_win64_mingw-w64/lib/libraylib.a
+        raylib_static
         winmm
 )
