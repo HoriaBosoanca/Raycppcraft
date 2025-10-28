@@ -27,7 +27,7 @@ bool Chunk::is_block_surrounded(Vector3 local_pos) {
 }
 
 void Chunk::add_block_to_model(Vector3 local_pos, BLOCK block) {
-    if (vertexCount1+24 <= USHRT_MAX) {
+    if (vertexCount1+cube.vertexCount <= USHRT_MAX) {
         for (int i = 0; i < cube.triangleCount * 3; i++) {
             indices1.push_back(cube.indices[i] + vertexCount1);
         }
@@ -99,7 +99,19 @@ void Chunk::build_model() {
     mesh2.indices = indices2.data();
     UploadMesh(&mesh2, false);
 
-    UnloadModel(model);
+    vertexCount1 = 0;
+    vertexCount2 = 0;
+    triangleCount1 = 0;
+    triangleCount2 = 0;
+    vertices1.clear();
+    vertices2.clear();
+    normals1.clear();
+    normals2.clear();
+    texcoords1.clear();
+    texcoords2.clear();
+    indices1.clear();
+    indices2.clear();
+
     model = { 0 };
     model.transform = MatrixIdentity();
     model.meshCount = 2;
@@ -113,19 +125,6 @@ void Chunk::build_model() {
     model.meshMaterial[0] = 0;
     model.meshMaterial[1] = 0;
     model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = ATLAS;
-
-    vertexCount1 = 0;
-    vertexCount2 = 0;
-    triangleCount1 = 0;
-    triangleCount2 = 0;
-    vertices1.clear();
-    vertices2.clear();
-    normals1.clear();
-    normals2.clear();
-    texcoords1.clear();
-    texcoords2.clear();
-    indices1.clear();
-    indices2.clear();
 }
 
 void Chunk::draw_model(Vector3 position) {
