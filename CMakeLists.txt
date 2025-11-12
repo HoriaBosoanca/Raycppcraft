@@ -3,18 +3,21 @@ project(raycppcraft)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_EXE_LINKER_FLAGS "-static -static-libgcc -static-libstdc++")
-add_subdirectory(lib/raylib-5.5)
 file(GLOB SOURCES CONFIGURE_DEPENDS
         src/*.cpp
         src/renderer/*.cpp
         src/worldgen/*.cpp
 )
-add_executable(main ${SOURCES})
-target_include_directories(main PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-        ${CMAKE_CURRENT_SOURCE_DIR}/lib/FastNoiseLite/include
+add_executable(raycppcraft ${SOURCES})
+add_subdirectory(lib/raylib-5.5)
+add_subdirectory(lib/bullet3-3.25)
+target_include_directories(raycppcraft PRIVATE
+        src
+        lib/FastNoiseLite/include
+        lib/bullet3-3.25/src
 )
-target_link_libraries(main PRIVATE
+target_link_libraries(raycppcraft
         raylib_static
+        BulletDynamics BulletCollision LinearMath
         winmm
 )
