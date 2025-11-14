@@ -7,6 +7,7 @@ file(GLOB SOURCES CONFIGURE_DEPENDS
         src/*.cpp
         src/renderer/*.cpp
         src/worldgen/*.cpp
+        src/physics/*.cpp
 )
 add_executable(raycppcraft ${SOURCES})
 add_subdirectory(lib/raylib-5.5)

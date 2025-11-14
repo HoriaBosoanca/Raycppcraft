@@ -1,5 +1,4 @@
 #include "chunk.h"
-#include <algorithm>
 #include <iostream>
 #include <raymath.h>
 #include "textures.h"

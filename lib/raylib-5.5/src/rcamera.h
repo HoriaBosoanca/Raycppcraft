@@ -465,8 +465,8 @@ void UpdateCamera(Camera *camera, int mode)
         if (IsKeyDown(KEY_UP)) CameraPitch(camera, cameraRotationSpeed, lockView, rotateAroundTarget, rotateUp);
         if (IsKeyDown(KEY_RIGHT)) CameraYaw(camera, -cameraRotationSpeed, rotateAroundTarget);
         if (IsKeyDown(KEY_LEFT)) CameraYaw(camera, cameraRotationSpeed, rotateAroundTarget);
-        if (IsKeyDown(KEY_Q)) CameraRoll(camera, -cameraRotationSpeed);
-        if (IsKeyDown(KEY_E)) CameraRoll(camera, cameraRotationSpeed);
+        // if (IsKeyDown(KEY_Q)) CameraRoll(camera, -cameraRotationSpeed);
+        // if (IsKeyDown(KEY_E)) CameraRoll(camera, cameraRotationSpeed);
 
         // Camera movement
         // Camera pan (for CAMERA_FREE)
@@ -486,10 +486,10 @@ void UpdateCamera(Camera *camera, int mode)
         }
 
         // Keyboard support
-        if (IsKeyDown(KEY_W)) CameraMoveForward(camera, cameraMoveSpeed, moveInWorldPlane);
-        if (IsKeyDown(KEY_A)) CameraMoveRight(camera, -cameraMoveSpeed, moveInWorldPlane);
-        if (IsKeyDown(KEY_S)) CameraMoveForward(camera, -cameraMoveSpeed, moveInWorldPlane);
-        if (IsKeyDown(KEY_D)) CameraMoveRight(camera, cameraMoveSpeed, moveInWorldPlane);
+        // if (IsKeyDown(KEY_W)) CameraMoveForward(camera, cameraMoveSpeed, moveInWorldPlane);
+        // if (IsKeyDown(KEY_A)) CameraMoveRight(camera, -cameraMoveSpeed, moveInWorldPlane);
+        // if (IsKeyDown(KEY_S)) CameraMoveForward(camera, -cameraMoveSpeed, moveInWorldPlane);
+        // if (IsKeyDown(KEY_D)) CameraMoveRight(camera, cameraMoveSpeed, moveInWorldPlane);
 
         // Gamepad movement
         if (IsGamepadAvailable(0))

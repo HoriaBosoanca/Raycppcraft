@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include "../renderer/chunk.h"
 #include "FastNoiseLite.h"
+#include "physics/physics.h"
 
 struct Vector2Hash {
     size_t operator()(const Vector2& v) const noexcept {
@@ -14,7 +15,7 @@ struct Vector2Equal {
     }
 };
 std::unordered_map<Vector2, Chunk, Vector2Hash, Vector2Equal> world;
-const int WORLD_SIZE = 16;
+const int WORLD_SIZE = 4;
 FastNoiseLite noise;
 
 void generate_chunk(Chunk& chunk, Vector2 world_pos) {
@@ -26,6 +27,7 @@ void generate_chunk(Chunk& chunk, Vector2 world_pos) {
                 chunk.add_block(Vector3{(float) x, (float) y, (float) z}, y < (height-1)/2 ? BLOCK::STONE : BLOCK::DIRT);
             }
             chunk.add_block(Vector3{(float) x, (float) y, (float) z}, BLOCK::GRASS);
+            Physics::add_static_cube(world_pos.x*CHUNK_SIZE + (float) x, (float) y, world_pos.y*CHUNK_SIZE + (float) z);
         }
     }
 }
